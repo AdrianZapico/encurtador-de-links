@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, status
 from app.models.link import Link, LinkCreate
 from app.core.utils import generate_short_code
-from app.db import db
+from app.db import db, redis_client
 from datetime import datetime
+from fastapi.responses import RedirectResponse
 
 router = APIRouter()
 
@@ -23,3 +24,23 @@ async def create_short_link(link_in: LinkCreate):
     await db.links.insert_one(new_link)
     
     return new_link
+
+@router.get("/{code}")
+async def redirect_to_url(code: str):
+    # 1. Busca o link no MongoDB pelo short_code
+    link_data = await db.links.find_one({"short_code": code})
+    
+    if not link_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Link não encontrado"
+        )
+    
+    # 2. Incrementa o contador de cliques no banco
+    await db.links.update_one(
+        {"short_code": code}, 
+        {"$inc": {"clicks": 1}}
+    )
+    
+    # 3. Redireciona o usuário para a URL original
+    return RedirectResponse(url=link_data["target_url"])
