@@ -21,9 +21,11 @@ async def create_short_link(link_in: LinkCreate):
     }
     
     # 3. Salvar no Banco
-    await db.links.insert_one(new_link)
+   await db.links.insert_one(new_link)
     
-    return new_link
+    # --- ONDE VOCÊ DEVE ALTERAR ---
+    # Em vez de 'return new_link', use:
+    return Link(**new_link)
 
 @router.get("/{code}")
 async def redirect_to_url(code: str):
