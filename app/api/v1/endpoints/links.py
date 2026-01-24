@@ -20,11 +20,11 @@ async def create_short_link(link_in: LinkCreate):
         "created_at": datetime.utcnow()
     }
     
-    # 3. Salvar no Banco
-   await db.links.insert_one(new_link)
+    await db.links.insert_one(new_link)
     
-    # --- ONDE VOCÊ DEVE ALTERAR ---
-    # Em vez de 'return new_link', use:
+    # RETORNO CORRIGIDO:
+    # Transformamos o dicionário em uma instância do modelo Link
+    # Isso limpa o campo _id que o MongoDB injeta automaticamente
     return Link(**new_link)
 
 @router.get("/{code}")
