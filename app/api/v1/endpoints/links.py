@@ -30,17 +30,15 @@ async def create_short_link(link_in: LinkCreate):
 @router.get("/{code}")
 async def redirect_to_url(code: str):
     # 1. Busca o link no MongoDB pelo short_code
-    link_data = await db.links.find_one({"short_code": code})
+    # Usamos o strip() para garantir que espaços não quebrem a busca
+    link_data = await db.links.find_one({"short_code": code.strip()})
     
     if not link_data:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
-            detail="Link não encontrado"
-        )
+        raise HTTPException(status_code=404, detail="Link não encontrado")
     
     # 2. Incrementa o contador de cliques no banco
     await db.links.update_one(
-        {"short_code": code}, 
+        {"short_code": code.strip()}, 
         {"$inc": {"clicks": 1}}
     )
     
