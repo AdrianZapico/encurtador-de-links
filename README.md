@@ -1,22 +1,23 @@
-🔗 Short.it - Encurtador de Links Full Stack
-O Short.it é uma aplicação completa para encurtamento de URLs, desenvolvida para demonstrar a integração entre um frontend moderno, uma API robusta e um banco de dados na nuvem.
+🛠️ README: Backend (Python + FastAPI)
+Repositório: encurtador-de-links
 
-🚀 Tecnologias Utilizadas
-Frontend: React.js com Vite e Axios para consumo de API.
+Encurtador de Links - API 🚀
+API robusta desenvolvida para gerir o encurtamento de URLs, armazenamento em base de dados e redirecionamento dinâmico.
 
-Backend: Python com FastAPI para uma API de alta performance.
+📝 Descrição
+Este é o núcleo do projeto, responsável por receber URLs longas, gerar códigos únicos e processar o redirecionamento. A API está hospedada no Render e comunica diretamente com o MongoDB Atlas.
 
-Banco de Dados: MongoDB Atlas (NoSQL) para persistência de dados e contagem de cliques.
+⚙️ Tecnologias
+FastAPI: Framework moderno para construção de APIs de alta performance.
 
-Deploy: Netlify (Frontend) e Render (Backend).
+MongoDB: Banco de dados NoSQL utilizado para persistência dos links e contagem de cliques.
 
-🛠️ Funcionalidades
-Encurtamento de URL: Transforma links longos em códigos únicos (ex: 5uLDmT).
+Motor: Driver assíncrono para integração com MongoDB.
 
-Redirecionamento Automático: Ao aceder ao link curto, o backend identifica o destino original no banco e redireciona o utilizador (Status 307).
+📡 Endpoints Principais
+POST /api/v1/links/: Cria um novo link encurtado. Recebe { "target_url": "..." }.
 
-Contador de Cliques: Regista quantas vezes cada link foi utilizado diretamente no documento do MongoDB.
+GET /api/v1/links/{code}: Busca o link no banco, incrementa o contador de cliques e redireciona o usuário (Status 307).
 
-Feedback em Tempo Real: Interface que indica estados de carregamento e permite copiar o link com um clique.
-
-frontend repository:https://github.com/AdrianZapico/encurtadorlink
+🌐 Deploy
+URL Base: https://encurtador-de-links-h4p4.onrender.com/api/v1
