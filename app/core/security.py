@@ -1,21 +1,25 @@
-from passlib.context import CryptContext
+import bcrypt
 from datetime import datetime, timedelta
 from jose import jwt
 
-# Configuração do algoritmo de criptografia
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-SECRET_KEY = "SUA_CHAVE_SUPER_SECRETA_AQUI" # Mude isso depois!
+SECRET_KEY = "SUA_CHAVE_SUPER_SECRETA_AQUI"
 ALGORITHM = "HS256"
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Transforma a senha em bytes, gera o salt e faz o hash
+    pwd_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(pwd_bytes, salt)
+    return hashed_password.decode('utf-8') # Salva como string no banco
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    # Compara a senha digitada com o hash do banco
+    password_byte = plain_password.encode('utf-8')
+    hashed_byte = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password_byte, hashed_byte)
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=30) # Token dura 30 min
+    expire = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

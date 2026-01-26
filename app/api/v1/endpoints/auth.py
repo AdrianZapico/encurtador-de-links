@@ -9,25 +9,29 @@ router = APIRouter()
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def register(user_in: UserCreate):
-    # 1. Verificar se o usuário já existe no MongoDB Atlas
+    # Verificar se já existe
     user_exists = await db["users"].find_one({"email": user_in.email})
     if user_exists:
         raise HTTPException(status_code=400, detail="E-mail já cadastrado.")
 
-    # 2. Criptografar a senha e preparar o documento
+    # Criptografar senha
     hashed = hash_password(user_in.password)
-    user_dict = UserInDB(
-        username=user_in.username,
-        email=user_in.email,
-        hashed_password=hashed
-    ).dict()
-
-    # 3. Salvar no Banco
-    new_user = await db["users"].insert_one(user_dict)
     
-    # 4. Retornar os dados (o Pydantic filtrará a senha automaticamente)
-    return {**user_dict, "_id": str(new_user.inserted_id)}
+    # Criar o dicionário dos dados
+    user_dict = {
+        "username": user_in.username,
+        "email": user_in.email,
+        "hashed_password": hashed,
+        "created_at": datetime.utcnow()
+    }
 
+    # Salvar no Atlas
+    result = await db["users"].insert_one(user_dict)
+    
+    # Adicionar o ID gerado de volta ao dicionário para o UserOut ler
+    user_dict["_id"] = str(result.inserted_id)
+    
+    return user_dict
 @router.post("/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     # 1. Buscar usuário por e-mail (ou username) no Atlas
