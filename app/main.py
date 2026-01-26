@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title=settings.PROJECT_NAME)
 app.include_router(links_router, prefix="/api/v1/links", tags=["links"])
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,3 +32,4 @@ async def shutdown_db_client():
 @app.get("/")
 async def root():
     return {"message": f"Bem-vindo ao {settings.PROJECT_NAME}", "status": "online"}
+
