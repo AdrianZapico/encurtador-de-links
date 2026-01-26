@@ -6,9 +6,3 @@ from app.core.config import settings
 client = AsyncIOMotorClient(settings.MONGO_URL)
 db = client.encurtador_db
 
-# Redis
-redis_client = redis.Redis(
-    host=settings.REDIS_HOST, 
-    port=settings.REDIS_PORT, 
-    decode_responses=True # Isso faz o Redis retornar strings em vez de bytes
-)
