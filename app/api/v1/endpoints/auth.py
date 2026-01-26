@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.user import UserCreate, UserOut, UserInDB
 from app.core.security import hash_password, verify_password, create_access_token
-from app.db.mongodb import db # Assumindo que sua conexão está aqui
+from app.db import db  
 from datetime import datetime
 
 router = APIRouter()

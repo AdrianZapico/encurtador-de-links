@@ -1,8 +1,12 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-import redis.asyncio as redis # Importe a versão assíncrona
-from app.core.config import settings
+import os
+from dotenv import load_dotenv
 
-# MongoDB
-client = AsyncIOMotorClient(settings.MONGO_URL)
+load_dotenv()
+
+MONGO_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+
+client = AsyncIOMotorClient(MONGO_URL)
 db = client.encurtador_db
 
+redis_client = None

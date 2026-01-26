@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.core.config import settings
 from app.db import client
 from app.api.v1.endpoints.links import router as links_router
+from app.api.v1.endpoints import auth
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title=settings.PROJECT_NAME)
