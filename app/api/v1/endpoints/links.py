@@ -19,7 +19,7 @@ async def create_short_link(link_in: LinkCreate):
         "clicks": 0,
         "created_at": datetime.utcnow()
     }
-    
+    # Salvar no banco de dadoss
     await db.links.insert_one(new_link)
     
   
